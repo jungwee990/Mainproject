@@ -124,6 +124,8 @@ class Game {
 		this.sun = light;
 		this.scene.add(light);
 
+		
+
 		// ground
 		const tLoader = new THREE.TextureLoader();
 		const groundTexture = tLoader.load(`${this.assetsPath}images/KakaoTalk_20210916_161725622.jpg`);
@@ -151,8 +153,9 @@ class Game {
 		grid.material.transparent = true;
 		this.scene.add(grid);
 
-		 const loader = new THREE.FBXLoader();
-		 const MLoader = new THREE.MaterialLoader();
+		//const manager = new THREE.LoadingManager();
+		//manager.addHandler( /\.tga$/i, new TGALoader() ); //삭제
+		const loader = new THREE.FBXLoader(); 
 		 		
 		//stage
 		const geometry = new THREE.BoxGeometry(11000, 100, 3000); // 5000,x,x
@@ -303,22 +306,47 @@ class Game {
 			game.scene.add(Cup3);
 
 		});		
-		//earth
-		loader.load(`${this.assetsPath}fbx/earth.fbx`, function (earth) {
-			earth.position.set(-3700, 150, 2100);
-			earth.scale.set(1.7, 1.7, 1.7);
-			earth.rotation.y = Math.PI / 1.4;
+		//ironman
+		loader.load(`${this.assetsPath}fbx/Ironman.FBX`, function (Ironman) {
+			Ironman.position.set(-4700, 150, 3000);
+			Ironman.scale.set(20, 20, 20);
+			Ironman.rotation.y = Math.PI / 1.4;
 
-			tLoader.load(`${game.assetsPath}images/PolygonPrototype_Texture_01.png`, function (earth_tx) {
-				earth.traverse(function (child) {
+			tLoader.load(`${game.assetsPath}images/Mesh Patter.jpg`, function (Ironman_tx) {
+				Ironman.traverse(function (child) {
 					if (child.isMesh) {
-						child.material.map = earth_tx;
+						child.material.map = Ironman_tx;
 						game.colliders.push(child);
 					}
 				});
 			});
-			game.scene.add(earth);
+			game.scene.add(Ironman);
 
+		});	
+
+		//남자매니저
+		loader.load(`${this.assetsPath}fbx/lpMale_casual_K.FBX`, function (lpMale_casual_K) {
+			lpMale_casual_K.position.set(1400, 50, -3000);
+			lpMale_casual_K.scale.set(5, 3, 5);
+			//lpMale_casual_K.rotation.y = Math.PI ;
+
+			tLoader.load(`${game.assetsPath}images/world_people_colors.png`, function (lpMale_casual_K_tx) {
+				lpMale_casual_K.traverse(function (child) {
+					if (child.isMesh) {
+						child.material.map = lpMale_casual_K_tx;
+						game.colliders.push(child);
+					}
+				});
+			});
+			game.scene.add(lpMale_casual_K);
+
+		});	
+		//여자매니저(toongirl)
+		loader.load(`${this.assetsPath}fbx/toongirl.FBX`, function (toongirl) {
+			toongirl.position.set(-3000, 0, -3000);
+			toongirl.scale.set(6, 2, 6);
+			toongirl.rotation.y = Math.PI / 4 ;			
+			game.scene.add(toongirl);
 		});	
 		// //boy
 		// loader.load(`${this.assetsPath}fbx/boy.fbx`, function (boy) {
@@ -403,6 +431,23 @@ class Game {
 					}
 				});							
 			game.scene.add(polygonkitchen);		
+			});
+			
+		});
+		//오피스3(휴게실)
+		loader.load(`${this.assetsPath}fbx/lounge4.fbx`, function (lounge4) {
+			lounge4.position.set(-8000, -80, -1100);  
+			lounge4.scale.set(2, 2, 2);
+			lounge4.rotation.y = Math.PI ;	
+
+			tLoader.load(`${game.assetsPath}images/PolygonOffice_Texture_01_A.png`, function (lounge_tx) {
+				lounge4.traverse(function (child) {
+					if (child.isMesh) {
+						child.material.map = lounge_tx;
+						game.colliders.push(child);
+					}
+				});							
+			game.scene.add(lounge4);		
 			});
 			
 		});
@@ -681,7 +726,8 @@ class Game {
 			 } else if(keyCode == 50){ // 2번
 				game.activeCamera = game.cameras.wide;
 				document.dispatchEvent(new KeyboardEvent('keydown', {key: '2'}));
-			  }else if(keyCode == 51){ // 3번
+			  }
+			  else if(keyCode == 51){ // 3번
 				game.activeCamera = game.cameras.collect;
 				document.dispatchEvent(new KeyboardEvent('keydown', {key: '3'}));
 			  }else if(keyCode == 52){ // 4번
@@ -694,11 +740,7 @@ class Game {
 		
 		
 		
-	 }
-
-	 
-  
-	
+	 }	
 	showMessage(msg, fontSize = 20, onOK = null) {
 		const txt = document.getElementById('message_text');
 		txt.innerHTML = msg;
